@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: common
+  namespace: argocd
+spec:
+  generators:
+  - matrix:
+      generators:
+        - clusters: {} # Match all managed clusters
+        - git:
+            repoURL: https://github.com/NetanelK/argocon-na-2025-gitops-armada-demo
+            revision: HEAD
+            files:
+              - path: apps/common/*/config.json
+  goTemplate: true
+  template:
+    metadata:
+      name: '{{.name}}-{{.path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: '{{.repoURL}}'
+        targetRevision: '{{.targetRevision}}'
+        path: '{{.sourcePath}}'
+      destination:
+        server: '{{.server}}'
+        namespace: '{{.namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

@@ -1,0 +1,6 @@
+{
+    "repoURL": "https://github.com/kubernetes/ingress-nginx",
+    "sourcePath": "charts/ingress-nginx",
+    "targetRevision": "HEAD",
+    "namespace": "kube-system"
+}

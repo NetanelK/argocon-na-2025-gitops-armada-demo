@@ -1,0 +1,6 @@
+{
+    "repoURL": "https://github.com/aws/karpenter-provider-aws",
+    "sourcePath": "charts/karpenter",
+    "targetRevision": "HEAD",
+    "namespace": "kube-system"
+}

@@ -1,0 +1,6 @@
+{
+  "repoURL": "https://github.com/aws/eks-charts",
+  "sourcePath": "stable/aws-load-balancer-controller",
+  "targetRevision": "HEAD",
+  "namespace": "kube-system"
+}

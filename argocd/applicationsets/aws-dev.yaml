@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: aws-dev-infrastructure
+  namespace: argocd
+spec:
+  generators:
+    - matrix:
+        generators:
+          - clusters:
+              selector:
+                matchLabels:
+                  cloud-provider: aws
+                  environment: dev
+          - git:
+              repoURL: https://github.com/NetanelK/argocon-na-2025-gitops-armada-demo
+              revision: HEAD
+              files:
+                - path: apps/aws/*/config.json
+  goTemplate: true
+  template:
+    metadata:
+      name: '{{.name}}-{{.path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: '{{.repoURL}}'
+        targetRevision: '{{.targetRevision}}'
+        path: '{{.sourcePath}}'
+      destination:
+        server: '{{.server}}'
+        namespace: '{{.namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+  templatePatch: |
+    spec:
+      source:
+        helm:
+          parameters:
+            - name: {{ eq .path.basename "aws-loadbalancer-controller" | ternary "clusterName" "settings.clusterName" }}
+              value: '{{.name}}'
